@@ -3,6 +3,8 @@ package octopussy.networking;
 import java.net.*;
 import java.io.*;
 
+import org.json.simple.JSONObject;
+
 public class ClientHandler implements Runnable {
   Socket socket;
 

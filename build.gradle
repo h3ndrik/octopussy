@@ -1,4 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.googlecode.json-simple:json-simple:1.1'
+    testCompile 'junit:junit:5.1'
+}
+
 mainClassName = 'octopussy.server.OctopussyServer'
