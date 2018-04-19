@@ -26,6 +26,7 @@ public class MessageBroker {
       channel.add(runde);
     }
     channel.add(client);
+    client.messageCallback(new Message(channelId, Message.MessageType.SUBACK, "subscribed"));
   }
 
   public void subscribeAllChannels(MessageReceiver client) {

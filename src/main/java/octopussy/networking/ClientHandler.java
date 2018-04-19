@@ -22,6 +22,7 @@ public class ClientHandler implements Runnable, MessageReceiver {
 
   @Override
   public void run() {
+    boolean disconnect = false;
     try {
       System.out.println("Neue Verbindung von " + socket.getInetAddress().getHostName());
       InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
@@ -42,20 +43,28 @@ public class ClientHandler implements Runnable, MessageReceiver {
             case Message.MessageType.SUBSCRIBE:
               broker.subscribeChannel(message.channel, this);
               break;
+            case Message.MessageType.DISCONNECT:
+              disconnect = true;
+              break;
             default:
               System.out.println("unrecognized message type!");
-              throw new IllegalArgumentException();
+              throw new UnsupportedOperationException();
           }
         } catch (ParseException e) {
           System.out.println("Invalid JSON: " + clientMessage);
+          JSONObject errorMessage = new Message(-1, Message.MessageType.ERROR, "Invalid JSON").toJSON();
+          out.println(errorMessage.toJSONString());
         } catch (IllegalArgumentException e) {
+          System.out.println("Malformed Message: " + clientMessage);
+          JSONObject errorMessage = new Message(-1, Message.MessageType.ERROR, "Malformed Message").toJSON();
+          out.println(errorMessage.toJSONString());
+        } catch (UnsupportedOperationException e) {
           System.out.println("Invalid Type: " + clientMessage);
+          JSONObject errorMessage = new Message(-1, Message.MessageType.ERROR, "Invalid Type").toJSON();
+          out.println(errorMessage.toJSONString());
         }
-        out.println("Ebenfalls " + clientMessage);
 
-        if (clientMessage.equalsIgnoreCase("quit")) {
-          break;
-        }
+        if (disconnect) { break; }
       }
 
       System.out.println("Beende Verbindung zu " + socket.getInetAddress().getHostName());
@@ -67,14 +76,15 @@ public class ClientHandler implements Runnable, MessageReceiver {
   }
 
   public void messageCallback(Message msg) {
-    out.println("MESSAGE!!");
+    out.println(msg.toJSON().toJSONString());
   }
 
   private Message parseMessageObject(JSONObject obj) {
-    Message message = new Message();
-    message.channel = toIntExact((Long) obj.get(Message.jsonKey.CHANNEL));;
-    message.type = (String) obj.get(Message.jsonKey.TYPE);
-    message.message = (String) obj.get(Message.jsonKey.MESSAGE);
+    Message message = new Message(
+        toIntExact((Long) obj.get(Message.jsonKey.CHANNEL)),
+        (String) obj.get(Message.jsonKey.TYPE),
+        (String) obj.get(Message.jsonKey.MESSAGE)
+    );
     return message;
   }
 

@@ -1,9 +1,26 @@
 package octopussy.networking;
 
+import org.json.simple.*;
+import org.json.simple.parser.*;
+
 public class Message {
   int channel;
   String type;
   String message;
+
+  public Message(int channel, String type, String message) {
+    this.channel = channel;
+    this.type = type;
+    this.message = message;
+  }
+
+  public JSONObject toJSON() {
+    JSONObject obj = new JSONObject();
+    obj.put(jsonKey.CHANNEL, channel);
+    obj.put(jsonKey.TYPE, type);
+    obj.put(jsonKey.MESSAGE, message);
+    return obj;
+  }
 
   public static class jsonKey {
     public static final String CHANNEL = "channel";
