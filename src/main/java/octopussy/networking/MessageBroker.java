@@ -4,6 +4,8 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+import octopussy.spiel.Runde;
+
 public class MessageBroker {
   private HashMap clients = new HashMap();
   private HashMap<Integer, ArrayList<MessageReceiver>> channels = new HashMap<Integer, ArrayList<MessageReceiver>>();
@@ -18,6 +20,10 @@ public class MessageBroker {
     if (channel == null) {
       channel = new ArrayList<MessageReceiver>();
       channels.put(channelId, channel);
+      // Create Game Server
+      Runde runde = new Runde(channelId);
+      new Thread(runde).start();
+      channel.add(runde);
     }
     channel.add(client);
   }
