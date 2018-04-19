@@ -14,6 +14,7 @@ public class ClientHandler implements Runnable, MessageReceiver {
   BufferedReader in;
   PrintWriter out;
 
+  boolean disconnect = false;
 
   ClientHandler(Socket client, MessageBroker broker) {
     this.socket = client;
@@ -22,7 +23,6 @@ public class ClientHandler implements Runnable, MessageReceiver {
 
   @Override
   public void run() {
-    boolean disconnect = false;
     try {
       System.out.println("Neue Verbindung von " + socket.getInetAddress().getHostName());
       InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
@@ -30,7 +30,7 @@ public class ClientHandler implements Runnable, MessageReceiver {
       out = new PrintWriter(socket.getOutputStream(),true);
 
       String clientMessage = null;
-      while((clientMessage = in.readLine()) != null) {
+      while((clientMessage = in.readLine()) != null) { // new message from client
         try {
           JSONObject obj = (JSONObject)JSONValue.parseWithException(clientMessage);
           System.out.println("Client: " + clientMessage);
@@ -42,6 +42,10 @@ public class ClientHandler implements Runnable, MessageReceiver {
               break;
             case Message.MessageType.SUBSCRIBE:
               broker.subscribeChannel(message.channel, this);
+              break;
+            case Message.MessageType.PINGREQ:
+              JSONObject respMessage = new Message(-1, Message.MessageType.PINGRESP, message.message).toJSON();
+              out.println(respMessage.toJSONString());
               break;
             case Message.MessageType.DISCONNECT:
               disconnect = true;
@@ -75,8 +79,13 @@ public class ClientHandler implements Runnable, MessageReceiver {
     }
   }
 
+  /* Sends message to the client */
   public void messageCallback(Message msg) {
     out.println(msg.toJSON().toJSONString());
+  }
+
+  public void close() {
+    this.disconnect = true;
   }
 
   private Message parseMessageObject(JSONObject obj) {

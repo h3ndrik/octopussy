@@ -30,8 +30,8 @@ public class Message {
 
   public static class MessageType {
     public static final String ERROR      = "ERROR";
-    public static final String CONNECT    = "CONNECT";
-    public static final String CONNACK    = "CONNACK";
+//    public static final String CONNECT    = "CONNECT";
+//    public static final String CONNACK    = "CONNACK";
     public static final String SUBSCRIBE  = "SUBSCRIBE";
     public static final String SUBACK     = "SUBACK";
     public static final String DISCONNECT = "DISCONNECT";
