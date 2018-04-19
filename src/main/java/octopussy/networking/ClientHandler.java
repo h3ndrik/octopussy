@@ -73,7 +73,7 @@ public class ClientHandler implements Runnable, MessageReceiver {
   private Message parseMessageObject(JSONObject obj) {
     Message message = new Message();
     message.channel = toIntExact((Long) obj.get(Message.jsonKey.CHANNEL));;
-    message.type = toIntExact((Long) obj.get(Message.jsonKey.TYPE));
+    message.type = (String) obj.get(Message.jsonKey.TYPE);
     message.message = (String) obj.get(Message.jsonKey.MESSAGE);
     return message;
   }

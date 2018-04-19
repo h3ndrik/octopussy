@@ -2,7 +2,7 @@ package octopussy.networking;
 
 public class Message {
   int channel;
-  int type;
+  String type;
   String message;
 
   public static class jsonKey {
@@ -12,14 +12,14 @@ public class Message {
   }
 
   public static class MessageType {
-    public static final int ERROR      = -1;
-    public static final int CONNECT    =  1;
-    public static final int CONNACK    =  2;
-    public static final int SUBSCRIBE  =  3;
-    public static final int SUBACK     =  4;
-    public static final int DISCONNECT =  5;
-    public static final int PINGREQ    =  6;
-    public static final int PINGRESP   =  7;
-    public static final int SPIELZUG   =  8;
+    public static final String ERROR      = "ERROR";
+    public static final String CONNECT    = "CONNECT";
+    public static final String CONNACK    = "CONNACK";
+    public static final String SUBSCRIBE  = "SUBSCRIBE";
+    public static final String SUBACK     = "SUBACK";
+    public static final String DISCONNECT = "DISCONNECT";
+    public static final String PINGREQ    = "PINGREQ";
+    public static final String PINGRESP   = "PINGRESP";
+    public static final String SPIELZUG   = "SPIELZUG";
   }
 }

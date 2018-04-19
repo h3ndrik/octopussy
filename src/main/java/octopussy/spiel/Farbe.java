@@ -1,10 +1,10 @@
 package octopussy.spiel;
 
 public class Farbe {
-  public static final int KARO  = 1;
-  public static final int HERZ  = 2;
-  public static final int PIK   = 3;
-  public static final int KREUZ = 4;
+  public static final String KARO  = "Karo";
+  public static final String HERZ  = "Herz";
+  public static final String PIK   = "Pik";
+  public static final String KREUZ = "Kreuz";
 
-  public static final int TRUMPF = 55;
+  public static final String TRUMPF = "Trumpf";
 }

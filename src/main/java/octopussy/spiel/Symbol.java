@@ -1,10 +1,10 @@
 package octopussy.spiel;
 
 public class Symbol {
-  public static final int ASS   = 1;
-  public static final int ZEHN  = 2;
-  public static final int KÖNIG = 3;
-  public static final int DAME  = 4;
-  public static final int BUBE  = 5;
-  public static final int NEUN  = 6;
+  public static final String ASS   = "Ass";
+  public static final String ZEHN  = "Zehn";
+  public static final String KÖNIG = "König";
+  public static final String DAME  = "Dame";
+  public static final String BUBE  = "Bube";
+  public static final String NEUN  = "Neun";
 }
