@@ -16,7 +16,7 @@ public class OctopussySocket {
     while (true) {
       Socket client = server.accept();
       ClientHandler handler = new ClientHandler(client, broker);
-      broker.registerClient(handler);
+//      broker.registerClient(handler);
       new Thread(handler).start();
     }
   }

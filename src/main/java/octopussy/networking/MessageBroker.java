@@ -7,12 +7,17 @@ import java.util.*;
 import octopussy.spiel.Runde;
 
 public class MessageBroker {
-  private HashMap clients = new HashMap();
+  private HashMap<String, ClientHandler> clients = new HashMap<String, ClientHandler>();
   private HashMap<Integer, ArrayList<MessageReceiver>> channels = new HashMap<Integer, ArrayList<MessageReceiver>>();
   private ArrayList<MessageReceiver> servers = new ArrayList<MessageReceiver>();
 
-  public void registerClient(ClientHandler client) {
-    clients.put(client, client);
+  public boolean registerClient(String player, ClientHandler client) {
+    ClientHandler entry = clients.get(player);
+    if (entry == null) {
+      clients.put(player, client);
+      return true;
+    }
+    return false;
   }
 
   public void subscribeChannel(int channelId, MessageReceiver client) {

@@ -6,8 +6,6 @@ import java.io.*;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
-import static java.lang.Math.toIntExact;
-
 public class ClientHandler implements Runnable, MessageReceiver {
   Socket socket;
   MessageBroker broker;
@@ -15,6 +13,8 @@ public class ClientHandler implements Runnable, MessageReceiver {
   PrintWriter out;
 
   boolean disconnect = false;
+  boolean logged_in = false;
+  String playerName;
 
   ClientHandler(Socket client, MessageBroker broker) {
     this.socket = client;
@@ -34,11 +34,33 @@ public class ClientHandler implements Runnable, MessageReceiver {
         try {
           JSONObject obj = (JSONObject)JSONValue.parseWithException(clientMessage);
           System.out.println("Client: " + clientMessage);
-          Message message = parseMessageObject(obj);
+          Message message = Message.parseMessageObject(obj);
+          System.out.println(message.player);
+          if (!message.type.equals(Message.MessageType.CONNECT)) {
+            message.player = playerName;
+          }
+          System.out.println(message.player);
 
           switch (message.type) {
             case Message.MessageType.SPIELZUG:
               broker.publishMessage(message);
+              break;
+            case Message.MessageType.CONNECT:
+              JSONObject connMessage;
+              if (!logged_in) {
+                logged_in = broker.registerClient(message.player, this);
+                if (logged_in) {
+                  connMessage = new Message(-1, Message.MessageType.CONNACK, message.message).toJSON();
+                  playerName = message.player;
+                  System.out.println("Player connected as: "+message.player);
+                } else {
+                  connMessage = new Message(-1, Message.MessageType.ERROR, "not possible").toJSON();
+                }
+              } else {
+                connMessage = new Message(-1, Message.MessageType.ERROR, "Already logged in as "+playerName).toJSON();
+              }
+
+              out.println(connMessage.toJSONString());
               break;
             case Message.MessageType.SUBSCRIBE:
               broker.subscribeChannel(message.channel, this);
@@ -86,15 +108,6 @@ public class ClientHandler implements Runnable, MessageReceiver {
 
   public void close() {
     this.disconnect = true;
-  }
-
-  private Message parseMessageObject(JSONObject obj) {
-    Message message = new Message(
-        toIntExact((Long) obj.get(Message.jsonKey.CHANNEL)),
-        (String) obj.get(Message.jsonKey.TYPE),
-        (String) obj.get(Message.jsonKey.MESSAGE)
-    );
-    return message;
   }
 
 }
