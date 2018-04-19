@@ -1,7 +1,7 @@
 package octopussy.spiel;
 
 public class Stich {
-  Farbe farbe;
+  Karte.Farbe farbe;
 
   public void lege(Karte karte, Spieler spieler) {
     throw new UnsupportedOperationException("Stich noch nicht implementiert");
