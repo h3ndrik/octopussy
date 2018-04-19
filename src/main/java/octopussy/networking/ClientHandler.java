@@ -3,7 +3,8 @@ package octopussy.networking;
 import java.net.*;
 import java.io.*;
 
-import org.json.simple.JSONObject;
+import org.json.simple.*;
+import org.json.simple.parser.*;
 
 public class ClientHandler implements Runnable {
   Socket socket;
@@ -22,6 +23,11 @@ public class ClientHandler implements Runnable {
 
       String clientMessage = null;
       while((clientMessage = in.readLine()) != null) {
+        try {
+          JSONObject obj = (JSONObject)JSONValue.parseWithException(clientMessage);
+        } catch (ParseException e) {
+          System.out.println("Invalid JSON");
+        }
         out.println("Ebenfalls " + clientMessage);
         System.out.println("Client: " + clientMessage);
         if (clientMessage.equalsIgnoreCase("quit")) {
