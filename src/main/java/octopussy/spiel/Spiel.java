@@ -11,11 +11,11 @@ public class Spiel {
   Partei contraPartei;
 
   public void auswerten() {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("noch nicht implementiert");
   }
 
   public void austeilen() {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("noch nicht implementiert");
   }
 
 }

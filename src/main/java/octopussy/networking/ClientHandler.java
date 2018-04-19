@@ -35,11 +35,9 @@ public class ClientHandler implements Runnable, MessageReceiver {
           JSONObject obj = (JSONObject)JSONValue.parseWithException(clientMessage);
           System.out.println("Client: " + clientMessage);
           Message message = Message.parseMessageObject(obj);
-          System.out.println(message.player);
           if (!message.type.equals(Message.MessageType.CONNECT)) {
             message.player = playerName;
           }
-          System.out.println(message.player);
 
           switch (message.type) {
             case Message.MessageType.SPIELZUG:
@@ -50,8 +48,8 @@ public class ClientHandler implements Runnable, MessageReceiver {
               if (!logged_in) {
                 logged_in = broker.registerClient(message.player, this);
                 if (logged_in) {
-                  connMessage = new Message(-1, Message.MessageType.CONNACK, message.message).toJSON();
                   playerName = message.player;
+                  connMessage = new Message(-1, Message.MessageType.CONNACK, "logged in as "+playerName).toJSON();
                   System.out.println("Player connected as: "+message.player);
                 } else {
                   connMessage = new Message(-1, Message.MessageType.ERROR, "not possible").toJSON();
@@ -85,7 +83,8 @@ public class ClientHandler implements Runnable, MessageReceiver {
           JSONObject errorMessage = new Message(-1, Message.MessageType.ERROR, "Malformed Message").toJSON();
           out.println(errorMessage.toJSONString());
         } catch (UnsupportedOperationException e) {
-          System.out.println("Invalid Type: " + clientMessage);
+          System.out.println("Unsupported Operation: " + clientMessage);
+          e.printStackTrace();
           JSONObject errorMessage = new Message(-1, Message.MessageType.ERROR, "Invalid Type").toJSON();
           out.println(errorMessage.toJSONString());
         }

@@ -6,18 +6,18 @@ import org.json.simple.parser.*;
 import static java.lang.Math.toIntExact;
 
 public class Message {
-  int channel;
-  String type;
-  String message;
-  String player;
+  public int channel;
+  public String type;
+  public Object message;
+  public String player;
 
-  public Message(int channel, String type, String message) {
+  public Message(int channel, String type, Object message) {
     this.channel = channel;
     this.type = type;
     this.message = message;
   }
 
-  public Message(int channel, String type, String message, String player) {
+  public Message(int channel, String type, Object message, String player) {
     this(channel, type, message);
     this.player = player;
   }
@@ -27,7 +27,7 @@ public class Message {
     obj.put(jsonKey.CHANNEL, channel);
     obj.put(jsonKey.TYPE, type);
     obj.put(jsonKey.MESSAGE, message);
-    obj.put(jsonKey.PLAYER, player);
+    if(player != null) obj.put(jsonKey.PLAYER, player);
     return obj;
   }
 
@@ -35,7 +35,7 @@ public class Message {
     Message message = new Message(
         toIntExact((Long) obj.get(Message.jsonKey.CHANNEL)),
         (String) obj.get(Message.jsonKey.TYPE),
-        (String) obj.get(Message.jsonKey.MESSAGE),
+        (Object) obj.get(Message.jsonKey.MESSAGE),
         (String) obj.get(Message.jsonKey.PLAYER)
     );
     return message;

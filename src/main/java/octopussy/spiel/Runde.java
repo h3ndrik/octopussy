@@ -24,6 +24,10 @@ public class Runde implements Runnable, MessageReceiver {
   }
 
   public void messageCallback(Message msg) {
-    System.out.println("RUNDE Message!!");
+    if (msg.type.equals(Message.MessageType.SPIELZUG)) {
+      System.out.println("Spielzug: "+msg.message);
+      Spielzug spielzug = Spielzug.parseFromMessage(msg.message);
+
+    }
   }
 }
